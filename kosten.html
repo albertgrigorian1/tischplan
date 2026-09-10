@@ -1,0 +1,870 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Kosten der Hochzeit: Dienstleister, Anzahlungen, offene Beträge in Euro und Dram.">
+<title>Kostenübersicht</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#FAF6F2; --surface:#FFFFFF; --surface-2:#F2EAE3;
+  --line:#E4D9CF; --line-strong:#CBBAAD;
+  --ink:#241C20; --ink-2:#6C5C61; --ink-3:#8F7F84;
+  --accent:#B0521F; --accent-soft:#F7E4D6; --on-accent:#FFF8F3;
+  --ok:#1C6A5E; --ok-soft:#DCEDE9;
+  --warn:#8A5312; --warn-soft:#FBEBD8;
+  --crit:#9A2F2F; --crit-soft:#F7E0DE;
+  --track:#EBE0D6;
+  --focus:#B0521F; --shadow:0 1px 2px rgba(36,28,32,.05);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#161114; --surface:#1F191D; --surface-2:#2A2227;
+    --line:#3A3036; --line-strong:#514349;
+    --ink:#F3EAE4; --ink-2:#B6A49F; --ink-3:#8E7C79;
+    --accent:#E08A52; --accent-soft:#3A2517; --on-accent:#1B1114;
+    --ok:#6ECCBA; --ok-soft:#122F29;
+    --warn:#E0A257; --warn-soft:#33240F;
+    --crit:#E98B85; --crit-soft:#3A1D1B;
+    --track:#332A2F;
+    --focus:#E08A52; --shadow:0 1px 2px rgba(0,0,0,.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#161114; --surface:#1F191D; --surface-2:#2A2227;
+  --line:#3A3036; --line-strong:#514349;
+  --ink:#F3EAE4; --ink-2:#B6A49F; --ink-3:#8E7C79;
+  --accent:#E08A52; --accent-soft:#3A2517; --on-accent:#1B1114;
+  --ok:#6ECCBA; --ok-soft:#122F29;
+  --warn:#E0A257; --warn-soft:#33240F;
+  --crit:#E98B85; --crit-soft:#3A1D1B;
+  --track:#332A2F;
+  --focus:#E08A52; --shadow:0 1px 2px rgba(0,0,0,.35);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1340px;margin:0 auto;padding:26px 20px 100px}
+
+.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px}
+h1{font-family:Fraunces,Georgia,serif;font-weight:600;font-size:32px;line-height:1.05;margin:0;letter-spacing:-.01em}
+.sub{margin:6px 0 0;color:var(--ink-2);font-size:14px;max-width:60ch}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+
+button{font:inherit;cursor:pointer;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);padding:9px 14px;transition:background .12s,border-color .12s,color .12s}
+button:hover{background:var(--surface-2)}
+button.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent);font-weight:500}
+button.primary:hover{filter:brightness(1.06);background:var(--accent)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+input{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line-strong);border-radius:7px;padding:8px 10px;width:100%}
+input::placeholder{color:var(--ink-3)}
+
+/* ---------- Summe oben ---------- */
+.summary{margin-top:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0}
+.kpis{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:baseline}
+.kpi{display:flex;flex-direction:column;gap:1px;min-width:118px}
+.kpi b{font-family:"IBM Plex Mono",monospace;font-size:23px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.15}
+.kpi span{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.kpi.paid b{color:var(--ok)}
+.kpi.open b{color:var(--accent)}
+.kpi.late b,.kpi.late span{color:var(--crit)}
+.savestate{margin-left:auto;font-size:12.5px;color:var(--ink-3);display:flex;align-items:center;gap:7px;align-self:center}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.savestate[data-state="saving"] .dot{background:var(--accent)}
+.savestate[data-state="local"] .dot{background:var(--warn)}
+
+.meter{height:8px;border-radius:4px;background:var(--track);overflow:hidden;margin-top:12px}
+.meter i{display:block;height:100%;border-radius:4px;background:var(--ok);transition:width .2s}
+.meterlab{margin:6px 0 0;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* ---------- Werkzeugleiste ---------- */
+.tools{display:flex;flex-wrap:wrap;gap:9px;align-items:center;margin-top:18px}
+.tools .search{flex:1 1 200px;max-width:320px}
+.filters{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.filters button{padding:6px 11px;font-size:13px;border-radius:16px}
+.filters button.on{background:var(--ink);border-color:var(--ink);color:var(--ground);font-weight:500}
+
+/* ---------- Karten ---------- */
+.cards{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));margin-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:11px;box-shadow:var(--shadow)}
+.card.late{border-color:var(--crit)}
+.card.done{border-color:var(--ok)}
+.card > header{display:flex;align-items:center;gap:9px}
+.idbadge{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:12.5px;background:var(--ink);color:var(--ground);border-radius:6px;padding:5px 8px;flex:none}
+.vname{font-weight:600;font-size:15.5px}
+.del{flex:none;border:0;background:transparent;color:var(--ink-3);font-size:16px;line-height:1;padding:6px 8px;border-radius:6px;cursor:pointer}
+.del:hover{background:var(--crit-soft);color:var(--crit)}
+.del.arm{background:var(--crit);color:var(--surface);font-size:11.5px;font-weight:600;padding:6px 10px}
+
+.f{display:flex;flex-direction:column;gap:4px}
+.f label,.blocklabel{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+input.eur{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;text-align:right}
+
+.balance{display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--surface-2);border-radius:9px;padding:9px 11px}
+.balance div{display:flex;flex-direction:column;gap:1px}
+.balance b{font-family:"IBM Plex Mono",monospace;font-size:19px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.balance span{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.card .meter{margin-top:0;height:6px}
+
+.chip{font-size:11px;font-weight:600;letter-spacing:.03em;border-radius:20px;padding:3px 9px;white-space:nowrap;display:inline-flex;align-items:center;gap:5px}
+.chip.s-open{background:var(--surface-2);color:var(--ink-2);border:1px solid var(--line-strong)}
+.chip.s-part{background:var(--accent-soft);color:var(--accent)}
+.chip.s-done{background:var(--ok-soft);color:var(--ok)}
+.chip.s-late{background:var(--crit-soft);color:var(--crit)}
+
+.contact{display:flex;flex-direction:column;gap:7px;border-top:1px solid var(--line);padding-top:10px}
+.linkrow{display:flex;gap:7px;align-items:center}
+.linkrow input{flex:1}
+.linkrow a{
+  flex:none;font-size:12px;font-weight:500;text-decoration:none;color:var(--accent);
+  border:1px solid var(--line-strong);border-radius:7px;padding:8px 10px;white-space:nowrap;
+}
+.linkrow a:hover{background:var(--accent-soft)}
+.linkrow a[aria-disabled="true"]{color:var(--ink-3);pointer-events:none;opacity:.5}
+
+.cursum{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.cursum:first-child{margin-top:10px;padding-top:0;border-top:0}
+.cursegs{display:flex;gap:6px}
+.cursegs button{flex:1;padding:7px 6px;font-size:13px;border-radius:7px;border-color:var(--line)}
+.cursegs button.on{background:var(--ink);border-color:var(--ink);color:var(--ground);font-weight:600}
+.rateline{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-2)}
+.rateline label{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);font-weight:600}
+.rateline input{width:96px;padding:5px 8px;font-family:"IBM Plex Mono",monospace;text-align:right}
+.rateline em{font-style:normal;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.empty{margin:40px 0;text-align:center;color:var(--ink-2)}
+
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:var(--ink);color:var(--ground);border-radius:10px;padding:10px 12px 10px 16px;display:flex;align-items:center;gap:12px;font-size:13.5px;box-shadow:0 8px 28px rgba(0,0,0,.28);z-index:50;max-width:92vw}
+.toast[hidden]{display:none}
+.toast button{background:transparent;border:1px solid rgba(255,255,255,.32);color:var(--ground);padding:5px 11px;font-size:13px}
+
+dialog{border:1px solid var(--line-strong);border-radius:12px;background:var(--surface);color:var(--ink);padding:18px;max-width:min(680px,92vw);width:100%;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+dialog::backdrop{background:rgba(20,14,17,.45)}
+dialog h2{font-family:Fraunces,Georgia,serif;font-size:20px;margin:0 0 4px}
+dialog p{margin:0 0 12px;color:var(--ink-2);font-size:13.5px}
+dialog textarea{width:100%;height:300px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:var(--surface-2);color:var(--ink);border:1px solid var(--line-strong);border-radius:8px;padding:10px}
+.dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}
+
+@media (max-width:640px){
+  .wrap{padding:20px 14px 90px}
+  h1{font-size:27px}
+  .kpi b{font-size:20px}
+  .kpi{min-width:100px}
+  .filters{margin-left:0;width:100%}
+  .cards{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <h1>Kostenübersicht</h1>
+      <p class="sub">Alle Dienstleister mit Kontakt, vereinbartem Preis, Anzahlung und offenem Rest.</p>
+    </div>
+    <div class="actions">
+      <button id="exportCsv">CSV exportieren</button>
+      <button id="exportTxt">Liste als Text</button>
+      <button id="addV" class="primary">+ Dienstleister</button>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="kpis">
+      <div class="kpi"><b id="kCount">0</b><span>Dienstleister</span></div>
+      <div class="kpi late" id="kLateWrap" hidden><b id="kLate">0</b><span>überfällig</span></div>
+      <div class="savestate" id="saveState" data-state="idle"><span class="dot"></span><span id="saveText">Bereit</span></div>
+    </div>
+    <div id="curSums"></div>
+    <div class="rateline">
+      <label for="rate">Kurs</label>
+      <span>1 €&nbsp;=</span>
+      <input id="rate" inputmode="decimal" placeholder="z. B. 430" autocomplete="off">
+      <span>֏</span>
+      <em id="rateOut"></em>
+    </div>
+  </div>
+
+  <div class="tools">
+    <input id="search" class="search" placeholder="Suchen — Name, Leistung, Notiz …" autocomplete="off">
+    <div class="filters" id="filters"></div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+  <p class="empty" id="empty" hidden>Noch kein Dienstleister eingetragen. Oben rechts auf „Dienstleister“.</p>
+</div>
+
+<datalist id="kinds">
+  <option value="Saal / Location"></option>
+  <option value="Catering"></option>
+  <option value="Musik / DJ"></option>
+  <option value="Live-Band"></option>
+  <option value="Fotograf"></option>
+  <option value="Video"></option>
+  <option value="Blumen / Deko"></option>
+  <option value="Torte"></option>
+  <option value="Brautkleid"></option>
+  <option value="Anzug"></option>
+  <option value="Schmuck / Ringe"></option>
+  <option value="Friseur"></option>
+  <option value="Make-up"></option>
+  <option value="Auto / Transport"></option>
+  <option value="Einladungen / Druck"></option>
+  <option value="Kirche"></option>
+  <option value="Sonstiges"></option>
+</datalist>
+
+<div class="toast" id="toast" hidden>
+  <span id="toastText"></span>
+  <button id="toastUndo">Rückgängig</button>
+</div>
+
+<dialog id="exportDlg">
+  <h2 id="dlgTitle">Export</h2>
+  <p>Der Download ist hier nicht verfügbar — Text markieren und kopieren.</p>
+  <textarea id="dlgText" readonly></textarea>
+  <div class="dialog-actions">
+    <button id="dlgCopy">Kopieren</button>
+    <button id="dlgClose" class="primary">Schließen</button>
+  </div>
+</dialog>
+
+<script>
+(function(){
+  "use strict";
+
+  var GH = {
+    repo: "albertgrigorian1/hochzeitskonvoi-daten",
+    path: "kosten.json",
+    branch: "main",
+    k: ["RlpHN1ZBMTFfdGFwX2J1aHRpZw==",
+        "YzlDTF95eEpjODNVY0RjbVEwSQ==",
+        "SzZDRTRybU1JdTU1Q0NnQUh2WQ==",
+        "ZUFGRU5RNDAybzhjR3hvRnU0aA==",
+        "N0ZPeVM5NUJZMzYzRVhSQ08="]
+  };
+
+  var $ = function(s){ return document.querySelector(s); };
+  var cardsEl = $("#cards"), saveState = $("#saveState"), saveText = $("#saveText");
+
+  var state = {nextNr:1, vendors:{}};
+  var store = null, filter = "all", search = "", undoSnap = null, toastTimer = null, bootstrapped = false;
+
+  var FILTERS = [
+    {k:"all",  l:"Alle",       fn:function(){ return true; }},
+    {k:"open", l:"Offen",      fn:function(v){ return open(v) > 0.005; }},
+    {k:"late", l:"Überfällig", fn:function(v){ return isLate(v); }},
+    {k:"done", l:"Bezahlt",    fn:function(v){ return v.total > 0 && open(v) <= 0.005; }}
+  ];
+
+  function pad(n){ return "V" + String(n).padStart(2,"0"); }
+  function norm(s){ return String(s||"").trim().replace(/\s+/g," "); }
+  function setSave(st,t){ saveState.setAttribute("data-state",st); saveText.textContent = t; }
+
+  /* ---------- Geld ---------- */
+  var CURS = [{k:"EUR", sym:"€", dec:2}, {k:"AMD", sym:"֏", dec:0}];
+  var curOf = {EUR:CURS[0], AMD:CURS[1]};
+  var nf = new Intl.NumberFormat("de-DE", {minimumFractionDigits:2, maximumFractionDigits:2});
+  var nf0 = new Intl.NumberFormat("de-DE", {maximumFractionDigits:0});
+  function numFmt(n, cur){
+    var c = curOf[cur] || CURS[0];
+    return (c.dec ? nf : nf0).format(n || 0);
+  }
+  function eur(n, cur){
+    var c = curOf[cur] || CURS[0];
+    return numFmt(n, cur) + " " + c.sym;
+  }
+  function eurShort(n, cur){
+    var c = curOf[cur] || CURS[0];
+    n = n || 0;
+    var txt = (Math.abs(n) >= 1000 || !c.dec) ? nf0.format(n) : nf.format(n);
+    return txt + " " + c.sym;
+  }
+  function parseEur(txt){
+    var s = String(txt || "").replace(/[^\d.,-]/g,"").trim();
+    if(!s) return 0;
+    if(/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g,"");      // 1.250,00
+    else if(/^-?\d{1,3}(,\d{3})+(\.\d+)?$/.test(s)) s = s.replace(/,/g,"");  // 1,250.00
+    s = s.replace(",", ".");
+    var n = parseFloat(s);
+    return isFinite(n) ? Math.round(n * 100) / 100 : 0;
+  }
+  function open(v){ return Math.max(0, (v.total || 0) - (v.paid || 0)); }
+  function isLate(v){
+    if(open(v) <= 0.005 || !v.due) return false;
+    var today = new Date(); today.setHours(0,0,0,0);
+    return new Date(v.due + "T00:00:00") < today;
+  }
+  function status(v){
+    if(isLate(v)) return {k:"late", l:"überfällig"};
+    if(v.total > 0 && open(v) <= 0.005) return {k:"done", l:"bezahlt"};
+    if((v.paid || 0) > 0) return {k:"part", l:"angezahlt"};
+    return {k:"open", l:"offen"};
+  }
+
+  function normalizeVendor(v, id){
+    v = v || {};
+    return {
+      nr: v.nr || parseInt(String(id).replace(/\D/g,""),10) || 1,
+      name: norm(v.name),
+      kind: norm(v.kind),
+      contact: norm(v.contact),
+      phone: norm(v.phone),
+      mail: norm(v.mail),
+      cur: (v.cur === "AMD") ? "AMD" : "EUR",
+      total: parseEur(v.total),
+      paid: parseEur(v.paid),
+      due: /^\d{4}-\d{2}-\d{2}$/.test(v.due || "") ? v.due : "",
+      note: String(v.note || "")
+    };
+  }
+  function normalizeState(s){
+    var out = {nextNr: (s && s.nextNr) || 1, rate: parseEur(s && s.rate) || 0, vendors:{}};
+    Object.keys((s && s.vendors) || {}).forEach(function(id){
+      out.vendors[id] = normalizeVendor(s.vendors[id], id);
+      out.nextNr = Math.max(out.nextNr, out.vendors[id].nr + 1);
+    });
+    return out;
+  }
+
+  /* ---------- Speicher ---------- */
+  function b64encode(str){
+    var bytes = new TextEncoder().encode(str), bin = "";
+    for(var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return btoa(bin);
+  }
+  function b64decode(b64){
+    var bin = atob(String(b64).replace(/\s/g,"")), bytes = new Uint8Array(bin.length);
+    for(var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new TextDecoder().decode(bytes);
+  }
+  function token(){
+    try { return GH.k.map(function(p){ return b64decode(p).split("").reverse().join(""); }).join(""); }
+    catch(e){ return ""; }
+  }
+  function clock(){
+    var d = new Date();
+    return String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+  }
+
+  function githubStore(){
+    var tok = token();
+    var api = "https://api.github.com/repos/" + GH.repo + "/contents/" + encodeURIComponent(GH.path);
+    var sha = null, writing = false, dirty = false, timer = null;
+
+    function headers(extra){
+      var h = {"Accept":"application/vnd.github+json","Authorization":"Bearer " + tok,
+               "X-GitHub-Api-Version":"2022-11-28"};
+      if(extra) Object.keys(extra).forEach(function(k){ h[k] = extra[k]; });
+      return h;
+    }
+    function fail(r){
+      if(r.status === 401) return "Token ungültig oder abgelaufen";
+      if(r.status === 403) return "Token hat keine Schreibrechte";
+      if(r.status === 404) return "Repository oder Branch nicht gefunden";
+      return "GitHub meldet HTTP " + r.status;
+    }
+    function pull(){
+      return fetch(api + "?ref=" + encodeURIComponent(GH.branch) + "&_=" + Date.now(),
+                   {headers:headers(), cache:"no-store"})
+        .then(function(r){
+          if(r.status === 404){ sha = null; return normalizeState({}); }
+          if(!r.ok) throw new Error(fail(r));
+          return r.json().then(function(j){
+            sha = j.sha;
+            var raw = j.content ? b64decode(j.content).trim() : "";
+            return normalizeState(raw ? JSON.parse(raw) : {});
+          });
+        });
+    }
+    function push(){
+      if(writing){ dirty = true; return; }
+      writing = true; dirty = false;
+      setSave("saving","Wird gespeichert …");
+      var payload = {message:"Kosten aktualisiert", branch:GH.branch,
+                     content:b64encode(JSON.stringify(state, null, 1))};
+      if(sha) payload.sha = sha;
+      return fetch(api, {method:"PUT", headers:headers({"Content-Type":"application/json"}),
+                         body:JSON.stringify(payload)})
+        .then(function(r){
+          if(r.status === 409 || r.status === 422){ dirty = true; return pull().then(function(){}); }
+          if(!r.ok) throw new Error(fail(r));
+          return r.json().then(function(j){ sha = j.content && j.content.sha; synced(); });
+        })
+        .catch(function(e){ setSave("local","Nicht gespeichert: " + e.message); })
+        .then(function(){ writing = false; if(dirty) push(); });
+    }
+    function synced(){ setSave("idle","Gemeinsame Liste · Stand " + clock()); }
+    function poll(){
+      if(writing || dirty || timer) return;
+      pull().then(function(s){ state = s; render(); synced(); })
+            .catch(function(e){ setSave("local","Kein Abgleich: " + e.message); });
+    }
+    return {
+      start:function(){
+        setSave("saving","Wird geladen …");
+        pull().then(function(s){ state = s; render(); synced(); boot(); })
+              .catch(function(e){ setSave("local","Verbindung fehlgeschlagen: " + e.message); bootstrapped = true; render(); });
+        setInterval(poll, 12000);
+        document.addEventListener("visibilitychange", function(){ if(!document.hidden) poll(); });
+        window.addEventListener("focus", poll);
+      },
+      save:function(){
+        if(timer) clearTimeout(timer);
+        setSave("saving","Wird gespeichert …");
+        timer = setTimeout(function(){ timer = null; push(); }, 1200);
+      }
+    };
+  }
+  function localStore(){
+    var KEY = "kosten.v1";
+    return {
+      start:function(){
+        try { var raw = localStorage.getItem(KEY); if(raw) state = normalizeState(JSON.parse(raw)); } catch(e){}
+        setSave("local","Auf diesem Gerät gespeichert"); render(); boot();
+      },
+      save:function(){
+        try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+        setSave("local","Auf diesem Gerät gespeichert");
+      }
+    };
+  }
+  function save(){ if(store) store.save(); }
+
+  /* ---------- Aktionen ---------- */
+  function toast(text){
+    $("#toastText").textContent = text;
+    $("#toast").hidden = false;
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ $("#toast").hidden = true; }, 6000);
+  }
+  $("#toastUndo").addEventListener("click", function(){
+    if(!undoSnap) return;
+    state = undoSnap; undoSnap = null;
+    $("#toast").hidden = true; save(); render();
+  });
+
+  function addVendor(){
+    var n = state.nextNr || 1;
+    Object.keys(state.vendors).forEach(function(id){ n = Math.max(n, state.vendors[id].nr + 1); });
+    undoSnap = JSON.parse(JSON.stringify(state));
+    state.nextNr = n + 1;
+    var id = pad(n);
+    state.vendors[id] = normalizeVendor({name:"", kind:""}, id);
+    save(); render();
+    var el = document.querySelector('[data-id="' + id + '"] .vname');
+    if(el){ el.scrollIntoView({behavior:"smooth", block:"center"}); el.focus(); }
+  }
+  function delVendor(id){
+    var name = state.vendors[id] && state.vendors[id].name;
+    undoSnap = JSON.parse(JSON.stringify(state));
+    delete state.vendors[id];
+    save(); render();
+    toast((name || "Eintrag") + " gelöscht");
+  }
+
+  /* ---------- Darstellung ---------- */
+  function ids(){
+    return Object.keys(state.vendors).sort(function(a,b){
+      var x = state.vendors[a], y = state.vendors[b];
+      var lx = isLate(x) ? 0 : 1, ly = isLate(y) ? 0 : 1;
+      if(lx !== ly) return lx - ly;                                  // Überfälliges zuerst
+      var dx = x.due || "9999-99-99", dy = y.due || "9999-99-99";
+      if(dx !== dy) return dx < dy ? -1 : 1;                         // dann nach Fälligkeit
+      return (x.name || "").localeCompare(y.name || "", "de");
+    });
+  }
+  function visible(id){
+    var v = state.vendors[id];
+    var f = FILTERS.filter(function(x){ return x.k === filter; })[0];
+    if(f && !f.fn(v)) return false;
+    if(search){
+      var hay = (v.name + " " + v.kind + " " + v.contact + " " + v.note + " " + v.phone + " " + v.mail).toLowerCase();
+      if(hay.indexOf(search) < 0) return false;
+    }
+    return true;
+  }
+
+  function render(){
+    var r = $("#rate");
+    if(r !== document.activeElement) r.value = state.rate ? nf0.format(state.rate) : "";
+    renderFilters(); renderCards(); renderSummary();
+  }
+
+  function renderFilters(){
+    var box = $("#filters");
+    if(box.childElementCount === FILTERS.length){
+      Array.prototype.forEach.call(box.children, function(b,i){ b.className = FILTERS[i].k === filter ? "on" : ""; });
+      return;
+    }
+    box.textContent = "";
+    FILTERS.forEach(function(f){
+      var b = document.createElement("button");
+      b.type = "button"; b.textContent = f.l;
+      if(f.k === filter) b.className = "on";
+      b.addEventListener("click", function(){ filter = f.k; render(); });
+      box.appendChild(b);
+    });
+  }
+
+  function renderSummary(){
+    var all = Object.keys(state.vendors), late = 0;
+    var sums = {EUR:{total:0, paid:0, n:0}, AMD:{total:0, paid:0, n:0}};
+    all.forEach(function(id){
+      var v = state.vendors[id], s2 = sums[v.cur] || sums.EUR;
+      s2.total += v.total || 0; s2.paid += v.paid || 0; s2.n++;
+      if(isLate(v)) late++;
+    });
+    $("#kCount").textContent = all.length;
+    $("#kLate").textContent = late;
+    $("#kLateWrap").hidden = late === 0;
+    $("#empty").hidden = all.length > 0;
+
+    var box = $("#curSums");
+    box.textContent = "";
+    var used = CURS.filter(function(c){ return sums[c.k].n > 0; });
+    if(!used.length){
+      var p0 = document.createElement("p");
+      p0.className = "meterlab"; p0.textContent = "Noch nichts eingetragen.";
+      box.appendChild(p0);
+    }
+    used.forEach(function(c){
+      var s2 = sums[c.k], offen = Math.max(0, s2.total - s2.paid);
+      var pct = s2.total > 0 ? Math.min(100, Math.round(s2.paid / s2.total * 100)) : 0;
+      var block = document.createElement("div");
+      block.className = "cursum";
+      var row = document.createElement("div");
+      row.className = "kpis";
+      [["", eurShort(s2.total, c.k), "Gesamt " + c.sym],
+       ["paid", eurShort(s2.paid, c.k), "bezahlt"],
+       ["open", eurShort(offen, c.k), "noch offen"]].forEach(function(x){
+        var k = document.createElement("div");
+        k.className = "kpi " + x[0];
+        var b = document.createElement("b"); b.textContent = x[1];
+        var sp = document.createElement("span"); sp.textContent = x[2];
+        k.append(b, sp); row.appendChild(k);
+      });
+      var meter = document.createElement("div");
+      meter.className = "meter";
+      var bar = document.createElement("i");
+      bar.style.width = pct + "%";
+      meter.appendChild(bar);
+      var lab = document.createElement("p");
+      lab.className = "meterlab";
+      lab.textContent = pct + " % bezahlt — " + eur(s2.paid, c.k) + " von " + eur(s2.total, c.k) +
+                        ", offen " + eur(offen, c.k);
+      block.append(row, meter, lab);
+      box.appendChild(block);
+    });
+
+    // Umrechnung nur anzeigen, wenn ein Kurs gesetzt ist
+    var out = $("#rateOut");
+    if(state.rate > 0 && sums.AMD.n){
+      var totalEur = sums.EUR.total + sums.AMD.total / state.rate;
+      var openEur = Math.max(0, sums.EUR.total - sums.EUR.paid) +
+                    Math.max(0, sums.AMD.total - sums.AMD.paid) / state.rate;
+      out.textContent = "zusammen rund " + eurShort(totalEur, "EUR") + ", davon offen " + eurShort(openEur, "EUR");
+    } else {
+      out.textContent = "";
+    }
+  }
+
+  function field(labelText, value, placeholder, onInput, cls){
+    var f = document.createElement("div");
+    f.className = "f";
+    var l = document.createElement("label"); l.textContent = labelText;
+    var i = document.createElement("input");
+    i.type = "text"; i.value = value; i.placeholder = placeholder || "";
+    if(cls) i.className = cls;
+    i.setAttribute("aria-label", labelText);
+    i.addEventListener("input", function(){ onInput(i.value, i); });
+    f.append(l, i);
+    return {wrap:f, input:i};
+  }
+
+  function renderCards(){
+    cardsEl.textContent = "";
+    ids().forEach(function(id){
+      if(!visible(id)) return;
+      var v = state.vendors[id];
+      var st = status(v);
+
+      var card = document.createElement("article");
+      card.className = "card" + (st.k === "late" ? " late" : st.k === "done" ? " done" : "");
+      card.setAttribute("data-id", id);
+
+      var head = document.createElement("header");
+      var badge = document.createElement("span");
+      badge.className = "idbadge"; badge.textContent = pad(v.nr);
+      var name = document.createElement("input");
+      name.className = "vname"; name.value = v.name; name.placeholder = "Name des Dienstleisters";
+      name.setAttribute("aria-label","Name");
+      name.addEventListener("input", function(){ state.vendors[id].name = name.value; save(); });
+      var del = document.createElement("button");
+      del.className = "del"; del.type = "button"; del.textContent = "✕"; del.title = "Eintrag löschen";
+      var armed = null;
+      del.addEventListener("click", function(){
+        if(!del.classList.contains("arm")){
+          del.classList.add("arm"); del.textContent = "Löschen?";
+          armed = setTimeout(function(){ del.classList.remove("arm"); del.textContent = "✕"; }, 5000);
+          return;
+        }
+        clearTimeout(armed); delVendor(id);
+      });
+      head.append(badge, name, del);
+
+      var kind = field("Leistung", v.kind, "z. B. Catering", function(val){
+        state.vendors[id].kind = val; save();
+      });
+      kind.input.setAttribute("list","kinds");
+
+      // Währung
+      var curRow = document.createElement("div");
+      curRow.className = "f";
+      var curLab = document.createElement("span");
+      curLab.className = "blocklabel"; curLab.textContent = "Währung";
+      var segs = document.createElement("div");
+      segs.className = "cursegs";
+      var curBtns = {};
+      CURS.forEach(function(c){
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.textContent = c.sym + "  " + (c.k === "EUR" ? "Euro" : "Dram");
+        if(v.cur === c.k) btn.className = "on";
+        btn.addEventListener("click", function(){
+          state.vendors[id].cur = c.k;
+          Object.keys(curBtns).forEach(function(k){ curBtns[k].className = (k === c.k) ? "on" : ""; });
+          var vv = state.vendors[id];
+          totalF.input.value = vv.total ? numFmt(vv.total, c.k) : "";
+          paidF.input.value = vv.paid ? numFmt(vv.paid, c.k) : "";
+          save(); refresh();
+        });
+        curBtns[c.k] = btn; segs.appendChild(btn);
+      });
+      curRow.append(curLab, segs);
+
+      // Beträge
+      var money = document.createElement("div");
+      money.className = "row2";
+      var totalF = field("Gesamt vereinbart", v.total ? numFmt(v.total, v.cur) : "", "0,00", function(val){
+        state.vendors[id].total = parseEur(val); refresh();
+      }, "eur");
+      var paidF = field("Bereits bezahlt", v.paid ? numFmt(v.paid, v.cur) : "", "0,00", function(val){
+        state.vendors[id].paid = parseEur(val); refresh();
+      }, "eur");
+      [totalF, paidF].forEach(function(f){
+        f.input.setAttribute("inputmode","decimal");
+        f.input.addEventListener("blur", function(){
+          var num = parseEur(f.input.value);
+          f.input.value = num ? numFmt(num, state.vendors[id].cur) : "";
+          save();
+        });
+      });
+      money.append(totalF.wrap, paidF.wrap);
+
+      // Restbetrag + Status
+      var bal = document.createElement("div");
+      bal.className = "balance";
+      var balLeft = document.createElement("div");
+      var balNum = document.createElement("b");
+      var balLab = document.createElement("span"); balLab.textContent = "offener Rest";
+      balLeft.append(balNum, balLab);
+      var chip = document.createElement("span");
+      bal.append(balLeft, chip);
+
+      var meter = document.createElement("div");
+      meter.className = "meter";
+      var bar = document.createElement("i");
+      meter.appendChild(bar);
+
+      var due = document.createElement("div");
+      due.className = "f";
+      var dueL = document.createElement("label"); dueL.textContent = "Rest fällig am";
+      var dueI = document.createElement("input");
+      dueI.type = "date"; dueI.value = v.due; dueI.setAttribute("aria-label","Rest fällig am");
+      dueI.addEventListener("input", function(){ state.vendors[id].due = dueI.value; save(); refresh(); });
+      due.append(dueL, dueI);
+
+      // Kontakt
+      var contact = document.createElement("div");
+      contact.className = "contact";
+      var person = field("Ansprechpartner", v.contact, "Name", function(val){
+        state.vendors[id].contact = val; save();
+      });
+      var phoneL = document.createElement("span");
+      phoneL.className = "blocklabel"; phoneL.textContent = "Telefon";
+      var phoneRow = document.createElement("div");
+      phoneRow.className = "linkrow";
+      var phone = document.createElement("input");
+      phone.type = "tel"; phone.value = v.phone; phone.placeholder = "+43 …"; phone.setAttribute("aria-label","Telefon");
+      var callA = document.createElement("a"); callA.textContent = "Anrufen";
+      phone.addEventListener("input", function(){
+        state.vendors[id].phone = phone.value; save(); setLink(callA, "tel:", phone.value);
+      });
+      setLink(callA, "tel:", v.phone);
+      phoneRow.append(phone, callA);
+
+      var mailL = document.createElement("span");
+      mailL.className = "blocklabel"; mailL.textContent = "E-Mail";
+      var mailRow = document.createElement("div");
+      mailRow.className = "linkrow";
+      var mail = document.createElement("input");
+      mail.type = "email"; mail.value = v.mail; mail.placeholder = "name@firma.at"; mail.setAttribute("aria-label","E-Mail");
+      var mailA = document.createElement("a"); mailA.textContent = "Schreiben";
+      mail.addEventListener("input", function(){
+        state.vendors[id].mail = mail.value; save(); setLink(mailA, "mailto:", mail.value);
+      });
+      setLink(mailA, "mailto:", v.mail);
+      mailRow.append(mail, mailA);
+
+      var note = field("Notiz", v.note, "z. B. Anzahlung am 12.8. überwiesen", function(val){
+        state.vendors[id].note = val; save();
+      });
+
+      contact.append(person.wrap, phoneL, phoneRow, mailL, mailRow, note.wrap);
+
+      card.append(head, kind.wrap, curRow, money, bal, meter, due, contact);
+      cardsEl.appendChild(card);
+
+      function refresh(){
+        var vv = state.vendors[id], s2 = status(vv);
+        balNum.textContent = eur(open(vv), vv.cur);
+        balNum.style.color = s2.k === "done" ? "var(--ok)" : s2.k === "late" ? "var(--crit)" : "var(--accent)";
+        chip.className = "chip s-" + s2.k;
+        chip.textContent = s2.l;
+        var pct = vv.total > 0 ? Math.min(100, Math.round((vv.paid || 0) / vv.total * 100)) : 0;
+        bar.style.width = pct + "%";
+        bar.style.background = s2.k === "late" ? "var(--crit)" : s2.k === "done" ? "var(--ok)" : "var(--accent)";
+        card.className = "card" + (s2.k === "late" ? " late" : s2.k === "done" ? " done" : "");
+        renderSummary();
+      }
+      refresh();
+    });
+  }
+
+  function setLink(a, scheme, value){
+    var v = String(value || "").trim();
+    if(!v){ a.removeAttribute("href"); a.setAttribute("aria-disabled","true"); return; }
+    a.setAttribute("href", scheme + (scheme === "tel:" ? v.replace(/[^\d+]/g,"") : v));
+    a.removeAttribute("aria-disabled");
+  }
+
+  /* ---------- Export ---------- */
+  function csv(){
+    var rows = [["Nr","Dienstleister","Leistung","Ansprechpartner","Telefon","E-Mail",
+                 "Währung","Gesamt","Bezahlt","Offen","Fällig am","Status","Notiz"]];
+    ids().forEach(function(id){
+      var v = state.vendors[id];
+      rows.push([pad(v.nr), v.name, v.kind, v.contact, v.phone, v.mail, v.cur,
+                 numFmt(v.total, v.cur), numFmt(v.paid, v.cur), numFmt(open(v), v.cur),
+                 v.due, status(v).l, v.note]);
+    });
+    rows.push([]);
+    CURS.forEach(function(c){
+      var t = 0, p = 0, n = 0;
+      Object.keys(state.vendors).forEach(function(id){
+        var v = state.vendors[id];
+        if(v.cur !== c.k) return;
+        t += v.total; p += v.paid; n++;
+      });
+      if(n) rows.push(["", "SUMME " + c.k, "", "", "", "", c.k,
+                       numFmt(t, c.k), numFmt(p, c.k), numFmt(Math.max(0, t - p), c.k), "", "", ""]);
+    });
+    return "﻿" + rows.map(function(r){
+      return r.map(function(v){
+        v = String(v == null ? "" : v);
+        return /[";\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v;
+      }).join(";");
+    }).join("\r\n");
+  }
+  function txt(){
+    var out = ["KOSTENÜBERSICHT", ""];
+    ids().forEach(function(id){
+      var v = state.vendors[id];
+      out.push(pad(v.nr) + "  " + (v.name || "ohne Namen") + (v.kind ? " — " + v.kind : ""));
+      out.push("    Gesamt " + eur(v.total, v.cur) + " · bezahlt " + eur(v.paid, v.cur) +
+               " · offen " + eur(open(v), v.cur) + "  [" + status(v).l + "]");
+      if(v.due) out.push("    Rest fällig am " + v.due.split("-").reverse().join("."));
+      if(v.contact || v.phone || v.mail)
+        out.push("    Kontakt: " + [v.contact, v.phone, v.mail].filter(Boolean).join(" · "));
+      if(v.note) out.push("    Notiz: " + v.note);
+      out.push("");
+    });
+    CURS.forEach(function(c){
+      var t = 0, p = 0, n = 0;
+      Object.keys(state.vendors).forEach(function(id){
+        var v = state.vendors[id];
+        if(v.cur !== c.k) return;
+        t += v.total; p += v.paid; n++;
+      });
+      if(n) out.push("Summe " + c.k + ": gesamt " + eur(t, c.k) + " · bezahlt " + eur(p, c.k) +
+                     " · offen " + eur(Math.max(0, t - p), c.k));
+    });
+    return out.join("\n");
+  }
+
+  var dlg = $("#exportDlg");
+  function browserDownload(filename, text){
+    try {
+      var type = /\.csv$/.test(filename) ? "text/csv;charset=utf-8" : "text/plain;charset=utf-8";
+      var url = URL.createObjectURL(new Blob([text], {type:type}));
+      var a = document.createElement("a");
+      a.href = url; a.download = filename; a.rel = "noopener";
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+      return true;
+    } catch(e){ return false; }
+  }
+  function claudeUse(name){
+    try { if(window.claude && typeof window.claude.use === "function") return window.claude.use(name); } catch(e){}
+    return Promise.resolve(null);
+  }
+  function offer(filename, text, title){
+    claudeUse("downloads").then(function(dl){
+      if(!dl) throw 0;
+      return dl.save({filename:filename, data:text});
+    }).catch(function(err){
+      if(err && err.code === "declined") return;
+      if(!window.claude && browserDownload(filename, text)) return;
+      $("#dlgTitle").textContent = title; $("#dlgText").value = text;
+      if(typeof dlg.showModal === "function") dlg.showModal();
+    });
+  }
+  $("#dlgClose").addEventListener("click", function(){ dlg.close(); });
+  $("#dlgCopy").addEventListener("click", function(){
+    var t = $("#dlgText"); t.select();
+    try { navigator.clipboard.writeText(t.value); } catch(e){ try { document.execCommand("copy"); } catch(e2){} }
+    $("#dlgCopy").textContent = "Kopiert";
+    setTimeout(function(){ $("#dlgCopy").textContent = "Kopieren"; }, 1500);
+  });
+  $("#exportCsv").addEventListener("click", function(){ offer("hochzeit-kosten.csv", csv(), "CSV-Export"); });
+  $("#exportTxt").addEventListener("click", function(){ offer("hochzeit-kosten.txt", txt(), "Textliste"); });
+  $("#addV").addEventListener("click", addVendor);
+  $("#rate").addEventListener("input", function(){
+    state.rate = parseEur($("#rate").value); save(); renderSummary();
+  });
+  $("#rate").addEventListener("blur", function(){
+    $("#rate").value = state.rate ? nf0.format(state.rate) : "";
+  });
+  $("#search").addEventListener("input", function(){
+    search = $("#search").value.trim().toLowerCase(); renderCards();
+  });
+
+  function boot(){
+    if(bootstrapped) return;
+    bootstrapped = true;
+    if(!Object.keys(state.vendors).length) addVendor();
+  }
+
+  store = (token() && !window.claude) ? githubStore() : localStore();
+  store.start();
+})();
+</script>
+</body>
+</html>
